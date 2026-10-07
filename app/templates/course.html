@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }}{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+    <a href="{{ url_for('course.home') }}">Home</a> &raquo; <span>{{ course.title }}</span>
+</nav>
+
+<section aria-labelledby="course-heading">
+    <h2 id="course-heading">{{ course.title }}</h2>
+    <p>{{ course.info }}</p>
+
+    <h3>Modules</h3>
+    <ol class="module-list">
+        {% for module in modules %}
+            <li>
+                <a href="{{ url_for('course.module_detail', course_id=course.id, module_id=module.id) }}"
+                   class="{{ 'completed' if module.id in completed_ids else '' }}">
+                    {{ module.title }}
+                    {% if module.id in completed_ids %}
+                        <span aria-label="completed">✓</span>
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ol>
+</section>
+{% endblock %}

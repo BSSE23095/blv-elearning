@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+<section aria-labelledby="login-heading">
+    <h2 id="login-heading">Log In</h2>
+
+    {% if error %}
+        <p role="alert">{{ error }}</p>
+    {% endif %}
+
+    <p id="puzzle-question" aria-live="assertive" tabindex="0">{{ question }}</p>
+
+    <form method="POST" action="{{ url_for('auth.login_submit') }}">
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" required autofocus
+               aria-describedby="name-help">
+        <span id="name-help">Used for a personalized audio greeting.</span>
+
+        <fieldset>
+            <legend>{{ question }}</legend>
+            {% for choice in choices %}
+                <label>
+                    <input type="radio" name="choice" value="{{ choice }}" required>
+                    {{ choice }}
+                </label>
+            {% endfor %}
+        </fieldset>
+
+        <button type="submit">Log In</button>
+    </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Read the puzzle question aloud automatically on page load.
+    window.addEventListener('DOMContentLoaded', () => {
+        const question = document.getElementById('puzzle-question').textContent;
+        if (window.speakText) {
+            window.speakText(question, {simplify: false});
+        }
+    });
+</script>
+{% endblock %}

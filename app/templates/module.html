@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ module.title }}{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+    <a href="{{ url_for('course.home') }}">Home</a> &raquo;
+    <a href="{{ url_for('course.course_detail', course_id=course.id) }}">{{ course.title }}</a> &raquo;
+    <span>{{ module.title }}</span>
+</nav>
+
+<ol class="progress-steps" role="progressbar" aria-valuenow="{{ progress_percent }}"
+    aria-valuemin="0" aria-valuemax="100" aria-label="Course progress: module {{ current_index + 1 }} of {{ module_steps|length }}">
+    {% for step in module_steps %}
+        <li class="{{ 'done' if step.id in completed_ids else '' }} {{ 'last' if loop.last else '' }}">
+            <span class="dot {{ 'done' if step.id in completed_ids else ('current' if loop.index0 == current_index else '') }}"
+                  aria-hidden="true"></span>
+        </li>
+    {% endfor %}
+</ol>
+<p>Module {{ current_index + 1 }} of {{ module_steps|length }} — {{ progress_percent }}% through this course</p>
+
+<section aria-labelledby="module-heading" id="module-content" data-module-id="{{ module.id }}">
+    <h2 id="module-heading">{{ module.title }}</h2>
+
+    {% for block in blocks %}
+        <p class="content-block" data-simplified="{{ block.simplified_text }}">{{ block.simplified_text }}</p>
+    {% endfor %}
+
+    <button id="btn-read-module" aria-label="Read this module aloud">🔊 Read Aloud</button>
+</section>
+
+<nav aria-label="Module navigation" class="module-nav">
+    {% if prev_id %}
+        <a href="{{ url_for('course.module_detail', course_id=course.id, module_id=prev_id) }}"
+           aria-label="Previous module">← Previous</a>
+    {% endif %}
+    <a href="{{ url_for('course.module_quiz', course_id=course.id, module_id=module.id) }}"
+       aria-label="Start module quiz">Take Quiz</a>
+    {% if next_id %}
+        <a href="{{ url_for('course.module_detail', course_id=course.id, module_id=next_id) }}"
+           aria-label="Next module">Next →</a>
+    {% endif %}
+</nav>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('btn-read-module').addEventListener('click', () => {
+        const text = Array.from(document.querySelectorAll('.content-block'))
+            .map(p => p.dataset.simplified).join(' ');
+        if (window.speakText) window.speakText(text, {simplify: false});
+    });
+</script>
+{% endblock %}

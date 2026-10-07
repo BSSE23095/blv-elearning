@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Diagram Description Tool{% endblock %}
+{% block content %}
+<section aria-labelledby="diagram-heading">
+    <h2 id="diagram-heading">Diagram Description Tool</h2>
+    <p>Upload an image of a diagram (bar chart, line chart, pie chart, flowchart,
+       anatomical, geometrical, or circuit diagram) and it will be classified and
+       described aloud.</p>
+
+    {% if not using_trained_weights %}
+        <p role="alert" class="notice-banner">
+            Note: no trained model weights found yet — predictions will be inaccurate
+            until real weights are placed at app/models/diagram_classifier.pt.
+        </p>
+    {% endif %}
+
+    <form id="diagram-form">
+        <label for="diagram-image">Choose an image</label>
+        <input type="file" id="diagram-image" name="image" accept="image/*" required
+               aria-describedby="diagram-help">
+        <span id="diagram-help">Accepted formats: PNG, JPG, GIF, BMP.</span>
+        <button type="submit">Classify and Describe</button>
+    </form>
+
+    <div id="diagram-result" role="status" aria-live="polite"></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('diagram-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fileInput = document.getElementById('diagram-image');
+    if (!fileInput.files.length) return;
+
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+
+    const resultDiv = document.getElementById('diagram-result');
+    resultDiv.textContent = 'Classifying diagram...';
+
+    try {
+        const resp = await fetch('{{ url_for("diagram.classify") }}', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await resp.json();
+
+        if (data.error) {
+            resultDiv.textContent = 'Error: ' + data.error;
+            return;
+        }
+
+        const message = `This looks like a ${data.predicted_class.replace('_', ' ')} ` +
+            `(confidence ${(data.confidence * 100).toFixed(1)}%). ${data.description}`;
+        resultDiv.textContent = message;
+        if (window.speakText) window.speakText(message, {simplify: false});
+    } catch (err) {
+        resultDiv.textContent = 'Something went wrong classifying the image.';
+    }
+});
+</script>
+{% endblock %}

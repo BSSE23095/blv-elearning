@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<section aria-labelledby="dashboard-heading">
+    <h2 id="dashboard-heading">Teacher Dashboard</h2>
+    <p>Logged in as {{ session.get('teacher_name') }} — <a href="{{ url_for('teacher.teacher_logout') }}">Log out</a></p>
+
+    <a href="{{ url_for('teacher.upload_content') }}" class="btn">Upload New Course Material</a>
+
+    <h3>Existing Courses</h3>
+    <ul>
+        {% for course in courses %}
+            <li>{{ course.title }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

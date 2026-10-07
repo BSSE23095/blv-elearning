@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Quiz Result{% endblock %}
+{% block content %}
+<section aria-labelledby="result-heading">
+    <h2 id="result-heading" aria-live="assertive">
+        You scored {{ correct }} out of {{ total }}.
+        {% if passed %}Module complete!{% else %}Try again to complete this module.{% endif %}
+    </h2>
+
+    <a href="{{ url_for('course.module_detail', course_id=course_id, module_id=module_id) }}">
+        Back to Module
+    </a>
+    {% if not passed %}
+        <a href="{{ url_for('course.module_quiz', course_id=course_id, module_id=module_id) }}">Retake Quiz</a>
+    {% endif %}
+</section>
+{% endblock %}

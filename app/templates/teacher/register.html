@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Teacher Registration{% endblock %}
+{% block content %}
+<section aria-labelledby="register-heading">
+    <h2 id="register-heading">Teacher Registration</h2>
+    <form method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Register</button>
+    </form>
+    <p><a href="{{ url_for('teacher.teacher_login') }}">Already have an account? Log in</a></p>
+</section>
+{% endblock %}

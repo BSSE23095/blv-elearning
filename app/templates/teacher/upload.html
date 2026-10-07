@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Upload Course Material{% endblock %}
+{% block content %}
+<section aria-labelledby="upload-heading">
+    <h2 id="upload-heading">Upload Course Material</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="course_id">Course</label>
+        <select id="course_id" name="course_id" required>
+            {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.title }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="module_title">New Module Title</label>
+        <input type="text" id="module_title" name="module_title" required>
+
+        <label for="content_file">Content File (PDF, DOCX, or plain text)</label>
+        <input type="file" id="content_file" name="content_file" accept=".pdf,.docx,.txt,.html" required>
+
+        <button type="submit">Upload and Simplify</button>
+    </form>
+
+    <h3>Upload a Diagram Image for Automatic Alt-Text</h3>
+    <form method="POST" action="{{ url_for('teacher.upload_image_for_alt_text') }}" enctype="multipart/form-data">
+        <label for="image">Diagram Image</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Generate Alt Text</button>
+    </form>
+</section>
+{% endblock %}

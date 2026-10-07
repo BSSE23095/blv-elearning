@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Module Quiz{% endblock %}
+{% block content %}
+<section aria-labelledby="quiz-heading">
+    <h2 id="quiz-heading">Module Quiz</h2>
+
+    <form method="POST" action="{{ url_for('course.submit_quiz', course_id=course_id, module_id=module_id) }}">
+        {% for q in questions %}
+            <fieldset>
+                <legend>{{ q.question }}</legend>
+                <label><input type="radio" name="q{{ q.id }}" value="a" required> {{ q.choice_a }}</label>
+                <label><input type="radio" name="q{{ q.id }}" value="b"> {{ q.choice_b }}</label>
+                <label><input type="radio" name="q{{ q.id }}" value="c"> {{ q.choice_c }}</label>
+            </fieldset>
+        {% endfor %}
+        <button type="submit">Submit Quiz</button>
+    </form>
+</section>
+{% endblock %}

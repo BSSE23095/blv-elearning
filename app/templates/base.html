@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Audio-First E-Learning{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <!-- Skip link for keyboard/screen reader users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner" aria-label="Site header">
+        <h1>Audio-First E-Learning</h1>
+        {% if session.get('user_name') %}
+            <span aria-live="polite">Hello, {{ session.get('user_name') }}</span>
+            <a href="{{ url_for('course.home') }}" aria-label="Go to home screen">Home</a>
+            <a href="{{ url_for('diagram.diagram_upload_page') }}" aria-label="Diagram description tool">Diagram Tool</a>
+            <a href="{{ url_for('auth.logout') }}" aria-label="Log out">Log out</a>
+        {% endif %}
+    </header>
+
+    <nav aria-label="Accessibility controls" class="a11y-controls">
+        <button id="btn-contrast" aria-label="Toggle high contrast mode">High Contrast</button>
+        <button id="btn-font-minus" aria-label="Decrease font size">A-</button>
+        <button id="btn-font-plus" aria-label="Increase font size">A+</button>
+        <button id="btn-voice-panel" aria-label="Toggle voice command panel">🎤 Voice</button>
+        <button id="btn-hear-commands" aria-label="Hear list of available commands">Hear Commands</button>
+    </nav>
+
+    <div id="voice-panel" role="region" aria-live="polite" aria-label="Voice command status" hidden>
+        <p id="voice-status">Voice panel ready. Press the microphone button and speak a command.</p>
+        <button id="btn-mic" aria-label="Start listening for a voice command">🎙 Start Listening</button>
+
+        <!-- Typed fallback for when the microphone is unavailable or denied -->
+        <form id="typed-command-form" aria-label="Type a command instead">
+            <label for="typed-command-input">Or type a command</label>
+            <input type="text" id="typed-command-input" name="command"
+                   placeholder="e.g. next module, read, stop"
+                   aria-describedby="voice-status">
+            <button type="submit" id="btn-send-typed-command">Send Command</button>
+        </form>
+    </div>
+
+    <main id="main-content" role="main">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div role="alert" class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Audio control bar: play, pause, stop, speed slider — bottom-left of every view -->
+    <footer role="contentinfo" id="audio-control-bar" aria-label="Audio playback controls">
+        <button id="btn-play" aria-label="Play audio">▶ Play</button>
+        <button id="btn-pause" aria-label="Pause audio">⏸ Pause</button>
+        <button id="btn-stop" aria-label="Stop audio">⏹ Stop</button>
+        <label for="speed-slider">Speed</label>
+        <input type="range" id="speed-slider" min="0.5" max="2.0" step="0.1" value="1.0"
+               aria-label="Playback speed, half times to two times">
+        <span id="speed-display" aria-live="polite">1.0x</span>
+        <audio id="tts-audio" preload="none"></audio>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/accessibility.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/audio-bar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/voice-nav.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gestures.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

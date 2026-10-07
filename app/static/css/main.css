@@ -1,0 +1,578 @@
+/*
+  Audio-First E-Learning — visual identity
+  ------------------------------------------
+  Color: cool paper background (not the generic warm-cream/terracotta
+  combo), deep blue-black ink, indigo primary, amber secondary (ties to
+  the "audio" theme), moss for progress/success.
+
+  Type: Atkinson Hyperlegible for body/UI — the typeface the Braille
+  Institute designed specifically for low-vision readability, chosen
+  because it's directly tied to this app's audience, not decoration.
+  Source Serif 4 for headings, for some academic warmth without being
+  a trendy display face. Both fall back to solid system fonts if a
+  browser has no internet (relevant for the offline-school scenario
+  the paper itself discusses).
+
+  High contrast mode (Section 3.2, low-vision accommodations) is left
+  untouched below — it's a functional accessibility requirement, not
+  a branding decision, and overrides these tokens completely.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:wght@500;600;700&display=swap');
+
+:root {
+    /* Color tokens */
+    --paper: #F7F8FA;
+    --ink: #14202E;
+    --ink-soft: #45525F;
+    --indigo: #2F5D8A;
+    --indigo-dark: #244a70;
+    --amber: #C98D22;
+    --moss: #3F7A5A;
+    --moss-dark: #326048;
+    --fog: #D9DCE1;
+    --fog-dark: #B9BFC7;
+    --card-bg: #FFFFFF;
+
+    /* Semantic aliases used throughout the stylesheet */
+    --bg-color: var(--paper);
+    --text-color: var(--ink);
+    --text-muted: var(--ink-soft);
+    --link-color: var(--indigo);
+    --accent-color: var(--moss);
+    --accent-secondary: var(--amber);
+    --border-color: var(--fog);
+
+    /* Type */
+    --font-body: "Atkinson Hyperlegible", "Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    --font-heading: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --font-size-base: 18px;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --shadow-card: 0 1px 2px rgba(20, 32, 46, 0.06), 0 4px 14px rgba(20, 32, 46, 0.05);
+}
+
+/* High contrast mode — functional override, not a style choice */
+body.high-contrast {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --text-muted: #ffffff;
+    --link-color: #ffff00;
+    --accent-color: #00ff00;
+    --accent-secondary: #ffff00;
+    --border-color: #ffffff;
+    --card-bg: #000000;
+    --shadow-card: none;
+}
+
+* { box-sizing: border-box; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 0 96px 0; /* room for fixed audio bar */
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 0.6em 0;
+    color: var(--text-color);
+}
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+
+p { max-width: 68ch; }
+
+a {
+    color: var(--link-color);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+}
+a:hover { text-decoration-thickness: 2.5px; }
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 16px;
+    z-index: 1000;
+    border-radius: 0 0 var(--radius-sm) 0;
+    font-weight: 700;
+}
+.skip-link:focus { left: 0; }
+
+/* ---------- Header / wordmark ---------- */
+header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    background: var(--card-bg);
+}
+
+header h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 1.4rem;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Small waveform mark — the one deliberate decorative flourish, used
+   once, tied directly to the "audio-first" identity. */
+header h1::before {
+    content: "";
+    display: inline-block;
+    width: 26px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 20'%3E%3Crect x='0' y='7' width='3' height='6' rx='1.5' fill='%232F5D8A'/%3E%3Crect x='5' y='3' width='3' height='14' rx='1.5' fill='%232F5D8A'/%3E%3Crect x='10' y='0' width='3' height='20' rx='1.5' fill='%23C98D22'/%3E%3Crect x='15' y='4' width='3' height='12' rx='1.5' fill='%232F5D8A'/%3E%3Crect x='20' y='8' width='3' height='4' rx='1.5' fill='%232F5D8A'/%3E%3Crect x='23' y='6' width='3' height='8' rx='1.5' fill='%23C98D22'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+}
+body.high-contrast header h1::before { filter: invert(1) grayscale(1) brightness(2); }
+
+header nav, header > span, header > a {
+    font-size: 0.98rem;
+}
+header span[aria-live] { color: var(--text-muted); }
+
+/* ---------- Accessibility toolbar ---------- */
+.a11y-controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--paper);
+}
+
+.a11y-controls button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.92rem;
+    font-weight: 700;
+    padding: 0.5em 0.9em;
+    min-height: 44px;
+    cursor: pointer;
+    border: 1.5px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 999px; /* pill toolbar reads as a control strip, not a card grid */
+}
+.a11y-controls button:hover { border-color: var(--indigo); }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 2px;
+}
+
+/* ---------- Voice panel ---------- */
+#voice-panel {
+    padding: 1rem 1.5rem;
+    border-bottom: 2px dashed var(--indigo);
+    background: color-mix(in srgb, var(--indigo) 6%, var(--paper));
+    margin: 0;
+}
+body.high-contrast #voice-panel { background: #000; }
+
+#voice-panel #btn-mic {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: var(--indigo);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.6em 1.2em;
+    font-weight: 700;
+    min-height: 44px;
+    cursor: pointer;
+}
+#voice-panel #btn-mic.listening {
+    background: var(--amber);
+    animation: pulse 1.1s ease-in-out infinite;
+}
+/* Typed command fallback, for when the mic is unavailable or denied */
+#typed-command-form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border-color);
+}
+#typed-command-form label {
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+#typed-command-input {
+    flex: 1 1 220px;
+    min-width: 180px;
+    margin: 0;
+}
+#typed-command-form button {
+    margin: 0;
+    min-height: 44px;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 141, 34, 0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(201, 141, 34, 0); }
+}
+
+/* ---------- Main content ---------- */
+main {
+    padding: 1.75rem 1.5rem 2rem;
+    min-height: 55vh;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+nav[aria-label="Breadcrumb"] {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+nav[aria-label="Breadcrumb"] a { color: var(--text-muted); }
+
+.flash-messages {
+    background: color-mix(in srgb, var(--amber) 12%, var(--card-bg));
+    border: 1.5px solid var(--amber);
+    color: var(--text-color);
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.25rem;
+}
+body.high-contrast .flash-messages { background: #000; color: #ffff00; border-color: #ffff00; }
+.flash-messages p { margin: 0.2em 0; }
+
+/* ---------- Course grid ---------- */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.1rem;
+}
+
+.course-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--indigo); /* subject accent, not decoration */
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.35rem;
+    box-shadow: var(--shadow-card);
+}
+.course-card:nth-of-type(2n) { border-left-color: var(--moss); }
+.course-card:nth-of-type(3n) { border-left-color: var(--amber); }
+body.high-contrast .course-card { border-left-color: #ffffff; box-shadow: none; }
+
+.course-card h3 { margin-bottom: 0.35rem; }
+.course-card p { color: var(--text-muted); font-size: 0.96rem; }
+
+.btn, a.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    background-color: var(--indigo);
+    color: #fff;
+    padding: 0.6em 1.1em;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 0.6rem;
+    min-height: 44px;
+}
+.btn:hover { background-color: var(--indigo-dark); }
+body.high-contrast .btn { background: #00ff00; color: #000; }
+
+.btn-read-info {
+    background: none;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.55em 1em;
+    border-radius: var(--radius-sm);
+    margin-top: 0.6rem;
+    margin-left: 0.5rem;
+    min-height: 44px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ---------- Module list / course detail ---------- */
+.module-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.module-list li a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--text-color);
+    background: var(--card-bg);
+}
+.module-list li a:hover { border-color: var(--indigo); }
+.module-list a.completed {
+    border-left: 4px solid var(--moss);
+    font-weight: 700;
+}
+.module-list a.completed span[aria-label="completed"] {
+    color: var(--moss);
+    font-weight: 700;
+}
+
+/* ---------- Stepped progress indicator ---------- */
+/* A dot per module, since modules genuinely are a sequence — filled
+   dots mark completed/passed steps, a ring marks the current one. */
+.progress-steps {
+    display: flex;
+    align-items: center;
+    margin: 0.25rem 0 0.4rem 0;
+    padding: 0;
+    list-style: none;
+}
+.progress-steps li {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+.progress-steps li:not(.last)::after {
+    content: "";
+    flex: 1;
+    height: 3px;
+    background: var(--fog);
+    margin: 0 0.3rem;
+}
+.progress-steps li.done:not(.last)::after { background: var(--moss); }
+.progress-steps .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--fog);
+    border: 2px solid var(--fog-dark);
+    flex-shrink: 0;
+}
+.progress-steps .dot.done { background: var(--moss); border-color: var(--moss-dark); }
+.progress-steps .dot.current {
+    background: var(--card-bg);
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 25%, transparent);
+}
+.progress-steps + p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+body.high-contrast .progress-steps .dot { border-color: #fff; background: #000; }
+body.high-contrast .progress-steps .dot.done { background: #00ff00; }
+body.high-contrast .progress-steps li::after { background: #fff; }
+
+/* Fallback plain bar, kept for the old aria-progressbar semantics
+   where a stepped list isn't used (e.g. narrow contexts) */
+.progress-bar {
+    background: var(--fog);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 1rem 0 1.5rem;
+    position: relative;
+    height: 10px;
+}
+.progress-fill { background: var(--moss); height: 100%; }
+.progress-bar span {
+    position: absolute;
+    left: 0;
+    top: 14px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ---------- Module content ---------- */
+#module-content { margin-bottom: 2rem; }
+.content-block {
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: var(--text-color);
+}
+
+#btn-read-module {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: var(--amber);
+    color: #201400;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.65em 1.2em;
+    font-weight: 700;
+    min-height: 44px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+body.high-contrast #btn-read-module { background: #ffff00; color: #000; }
+
+.module-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+}
+.module-nav a { font-weight: 700; }
+
+/* ---------- Forms / quiz / login ---------- */
+fieldset {
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.1rem;
+    padding: 1rem 1.2rem;
+    background: var(--card-bg);
+}
+legend {
+    font-weight: 700;
+    padding: 0 0.4em;
+    font-family: var(--font-heading);
+}
+label { display: block; margin: 0.5em 0 0.25em; font-weight: 600; }
+fieldset label { font-weight: 400; margin: 0.35em 0; }
+
+input[type="text"], input[type="password"], select, input[type="file"] {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.6em 0.7em;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--card-bg);
+    color: var(--text-color);
+    min-height: 44px;
+    width: 100%;
+    max-width: 420px;
+}
+
+button, input[type="submit"] {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.6em 1.2em;
+    min-height: 44px;
+    min-width: 44px;
+    cursor: pointer;
+    border: 1.5px solid var(--indigo);
+    background-color: var(--indigo);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    margin-top: 0.75rem;
+}
+button:hover, input[type="submit"]:hover { background-color: var(--indigo-dark); }
+body.high-contrast button, body.high-contrast input[type="submit"] {
+    background: #00ff00; color: #000; border-color: #00ff00;
+}
+
+#puzzle-question {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    background: color-mix(in srgb, var(--indigo) 8%, var(--paper));
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--indigo);
+}
+
+/* ---------- Diagram tool ---------- */
+#diagram-result {
+    margin-top: 1.25rem;
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--moss) 8%, var(--card-bg));
+    border-left: 4px solid var(--moss);
+    min-height: 1.5em;
+}
+#diagram-result:empty { display: none; }
+
+/* ---------- Audio control bar (fixed, media-player styling) ---------- */
+#audio-control-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 1.5rem;
+    background: var(--ink);
+    color: #fff;
+    border-top: none;
+    flex-wrap: wrap;
+    z-index: 500;
+}
+#audio-control-bar button {
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.5em 1em;
+    min-height: 44px;
+    min-width: 44px;
+    margin-top: 0;
+}
+#audio-control-bar button:hover { background: rgba(255,255,255,0.18); }
+#audio-control-bar label { color: rgba(255,255,255,0.75); margin: 0; font-weight: 600; font-size: 0.85rem; }
+#audio-control-bar #speed-slider { accent-color: var(--amber); }
+#audio-control-bar #speed-display { font-variant-numeric: tabular-nums; min-width: 3ch; }
+body.high-contrast #audio-control-bar { background: #000; border-top: 2px solid #fff; }
+body.high-contrast #audio-control-bar button { border-color: #fff; }
+
+/* ---------- Notice banners (teacher dashboard, diagram tool, etc.) ---------- */
+.notice-banner {
+    background: color-mix(in srgb, var(--amber) 12%, var(--card-bg));
+    border-left: 4px solid var(--amber);
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.25rem;
+}
+body.high-contrast .notice-banner { background: #000; border-color: #ffff00; color: #ffff00; }
+
+@media (max-width: 640px) {
+    header { padding: 0.85rem 1rem; }
+    main { padding: 1.25rem 1rem 1.5rem; }
+    .a11y-controls { padding: 0.5rem 1rem; }
+    #audio-control-bar { padding: 0.5rem 0.75rem; }
+}
